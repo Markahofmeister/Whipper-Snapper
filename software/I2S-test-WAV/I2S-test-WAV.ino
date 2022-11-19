@@ -17,7 +17,7 @@
 #include <SD.h> 
 #include <ArduinoSound.h>
 
-const char file1[] = "1_YEAH.WAV";
+const char file1[] = "0.WAV";
 SDWaveFile waveFile1;
 
 void setup() {
