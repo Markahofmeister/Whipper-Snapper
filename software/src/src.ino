@@ -44,14 +44,14 @@ void setup() {
     
     waveFile[i] = SDWaveFile(fileNames[0]);     //initialize wave file objects based on file names
     
-    if(!waveFile[i]) {                          //check to see if file was initialized successfully
+    if(!(waveFile[i])) {                          //check to see if file was initialized successfully
       Serial.print("Wave file ");
       Serial.print(i);
       Serial.println(" is invalid.");
       while(1);
       
     } 
-    else if(!AudioOutI2S.canPlay(waveFile[i])) {    //check to see if the wave file can be played
+    else if(!(AudioOutI2S.canPlay(waveFile[i]))) {    //check to see if the wave file can be played
 
       Serial.print("Wave file ");
       Serial.print(i);
@@ -67,7 +67,7 @@ void setup() {
     
   }
 
-  AudioOutI2S.volume(100.0);               //max volume
+  AudioOutI2S.volume(50.0);               //max volume
 
   /*for(int i = 0; i < numFiles; i++) {                     //do later
     attachInterrupt(digitalPinToInterrupt(interruptPins[i]), 
