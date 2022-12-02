@@ -25,6 +25,23 @@ const char fileNames[][6] =                 //Define array of character strings 
 
 SDWaveFile waveFile[6];                       //define SDWaveFile objects for each wave file 
 
+void playISR0();                              //function prototypes to declare before array initialization 
+void playISR1();
+void playISR2();
+void playISR3();
+void playISR4();
+void playISR5();
+
+typedef void (*FunctionArray)(void);          //typedef to make an array of functions 
+
+FunctionArray ISRs[] = {                      //pointer to array of ISR names 
+  playISR0, 
+  playISR1,
+  playISR2,
+  playISR3,
+  playISR4,
+  playISR5
+};
 
 void setup() {
 
@@ -42,13 +59,13 @@ void setup() {
 
   for(int i = 0; i < numFiles; i++) {
     
-    waveFile[i] = SDWaveFile(fileNames[0]);     //initialize wave file objects based on file names
+    waveFile[i] = SDWaveFile(fileNames[i]);     //initialize wave file objects based on file names
     
     if(!(waveFile[i])) {                          //check to see if file was initialized successfully
       Serial.print("Wave file ");
       Serial.print(i);
       Serial.println(" is invalid.");
-      while(1);
+      //while(1);
       
     } 
     else if(!(AudioOutI2S.canPlay(waveFile[i]))) {    //check to see if the wave file can be played
@@ -56,7 +73,7 @@ void setup() {
       Serial.print("Wave file ");
       Serial.print(i);
       Serial.println(" is unplayable.");
-      while(1);
+      //while(1);
       
     }
     else {
@@ -67,37 +84,21 @@ void setup() {
     
   }
 
-  AudioOutI2S.volume(50.0);               //max volume
+  AudioOutI2S.volume(20.0);                         //max volume = 100.0
 
-  /*for(int i = 0; i < numFiles; i++) {                     //do later
-    attachInterrupt(digitalPinToInterrupt(interruptPins[i]), 
-  }*/
-
-  attachInterrupt(digitalPinToInterrupt(interruptPins[0]),  playISR0, RISING);
-  attachInterrupt(digitalPinToInterrupt(interruptPins[1]),  playISR1, RISING);
-  attachInterrupt(digitalPinToInterrupt(interruptPins[2]),  playISR2, RISING);
-  attachInterrupt(digitalPinToInterrupt(interruptPins[3]),  playISR3, RISING);
-  attachInterrupt(digitalPinToInterrupt(interruptPins[4]),  playISR4, RISING);
-  attachInterrupt(digitalPinToInterrupt(interruptPins[5]),  playISR5, RISING);
-
+  for(int i = 0; i < numFiles; i++) {               //loop through attaching interrupts to proper ISRs
+    
+    attachInterrupt(digitalPinToInterrupt(interruptPins[i]),ISRs[i], RISING); 
+  
+  }
+  
 }
 
 void loop() {
 
-noInterrupts();
-
-    
-      AudioOutI2S.play(waveFile[1]);  
-      
-
-  delay(5000);
-
-}
-
-/*void (*selectISR[6])() {
-
+    //Dead loop. Awaiting ISR triggerings 
   
-}*/
+}
 
 void playISR0() {
 
