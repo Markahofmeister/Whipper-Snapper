@@ -2,7 +2,7 @@
  * src.ino
  * Author: Mark Hofmeister 
  * Created: 11/19/2022
- * Last commit: 11/19/2022
+ * Last commit: 12/2/2022
  * 
  * source code for Whipper-Snapper. Reads SD card files, initializes I2S output, and waits to enter interrupt service routines. 
  */
@@ -14,6 +14,8 @@ uint8_t numFiles = 6;
 uint8_t interruptPins[] =                   //Declare pins to be used for external interrupts
 {  0, 1, 4, 
    5, 6, 7  };
+
+uint8_t pwrLED = 9;
   
 const char fileNames[][6] =                 //Define array of character strings for wave file obect initialization
 {  "0.WAV", 
@@ -86,11 +88,15 @@ void setup() {
 
   AudioOutI2S.volume(20.0);                         //max volume = 100.0
 
+  pinMode(pwrLED, OUTPUT);
+
   for(int i = 0; i < numFiles; i++) {               //loop through attaching interrupts to proper ISRs
     
     attachInterrupt(digitalPinToInterrupt(interruptPins[i]),ISRs[i], RISING); 
   
   }
+
+  digitalWrite(pwrLED, HIGH);                       //Write LED HIGH to indicate a successful initialization of all files. 
   
 }
 
