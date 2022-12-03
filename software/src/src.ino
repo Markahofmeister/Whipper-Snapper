@@ -15,7 +15,7 @@ uint8_t interruptPins[] =                   //Declare pins to be used for extern
 {  0, 1, 4, 
    5, 6, 7  };
 
-uint8_t pwrLED = 9;
+uint8_t pwrLED = 9;                         //LED will indicate when all files have been intialized successfully. 
   
 const char fileNames[][6] =                 //Define array of character strings for wave file obect initialization
 {  "0.WAV", 
@@ -25,16 +25,16 @@ const char fileNames[][6] =                 //Define array of character strings 
    "4.WAV", 
    "5.WAV"  };
 
-SDWaveFile waveFile[6];                       //define SDWaveFile objects for each wave file 
+SDWaveFile waveFile[6];                       //define array of SDWaveFile objects. This will store objects once they're initialized. 
 
-void playISR0();                              //function prototypes to declare before array initialization 
+void playISR0();                              //ISR function prototypes to declare before array initialization 
 void playISR1();
 void playISR2();
 void playISR3();
 void playISR4();
 void playISR5();
 
-typedef void (*FunctionArray)(void);          //typedef to make an array of functions 
+typedef void (*FunctionArray)(void);          //typedef to make an array of functions. This allows us to attach interrupts using a loop. 
 
 FunctionArray ISRs[] = {                      //pointer to array of ISR names 
   playISR0, 
@@ -48,12 +48,12 @@ FunctionArray ISRs[] = {                      //pointer to array of ISR names
 void setup() {
 
   Serial.begin(9600);                         //Command Serial to initialize and wait 
-  while (!Serial);
-  Serial.println("Serial monitor initialized");
+  while (!Serial);                            //Wait for Serial monitor to be initialized 
+  Serial.println("Serial monitor initialized"); 
   
-  Serial.print("Initializing SD card...");  //Ensure that SD card can be read 
+  Serial.print("Initializing SD card...");      //Ensure that SD card can be read 
   if (!SD.begin()) {
-    Serial.println("failed!");
+    Serial.println("failed!");                //If SD card cannot be read, hang in dead loop. LED will not illuminate, and user will know that something is wrong. 
     while(1);
   } 
   
@@ -61,13 +61,13 @@ void setup() {
 
   for(int i = 0; i < numFiles; i++) {
     
-    waveFile[i] = SDWaveFile(fileNames[i]);     //initialize wave file objects based on file names
+    waveFile[i] = SDWaveFile(fileNames[i]);         //initialize wave file objects based on file names
     
-    if(!(waveFile[i])) {                          //check to see if file was initialized successfully
+    if(!(waveFile[i])) {                            //check to see if file was initialized successfully
       Serial.print("Wave file ");
       Serial.print(i);
       Serial.println(" is invalid.");
-      //while(1);
+      //while(1);                     
       
     } 
     else if(!(AudioOutI2S.canPlay(waveFile[i]))) {    //check to see if the wave file can be played
@@ -78,7 +78,7 @@ void setup() {
       //while(1);
       
     }
-    else {
+    else {                                            //If .wav file was initialized successfully and can be played, continue on. 
       Serial.print("Wave file ");
       Serial.print(i);
       Serial.println(" successfully Initialized.");
@@ -86,7 +86,7 @@ void setup() {
     
   }
 
-  AudioOutI2S.volume(20.0);                         //max volume = 100.0
+  AudioOutI2S.volume(20.0);                         //max volume = 100.0. Some bass issues above ~70.0 volume. 
 
   pinMode(pwrLED, OUTPUT);
 
@@ -96,7 +96,7 @@ void setup() {
   
   }
 
-  digitalWrite(pwrLED, HIGH);                       //Write LED HIGH to indicate a successful initialization of all files. 
+  digitalWrite(pwrLED, HIGH);                       //Write LED HIGH to indicate a successful initialization of all files and interrupt attachments. 
   
 }
 
@@ -114,8 +114,8 @@ void playISR0() {
     
       //do nothing. Let other file play.
       
-  } else {
-    
+  } else {                                    //If nothing is playing currently, a new file can be played. 
+        
       AudioOutI2S.play(waveFile[0]);  
       
   }
@@ -130,7 +130,7 @@ void playISR1() {
     
       //do nothing. Let other file play.
       
-  } else {
+  } else {                                   //If nothing is playing currently, a new file can be played. 
     
       AudioOutI2S.play(waveFile[1]);  
       
@@ -146,7 +146,7 @@ void playISR2() {
     
       //do nothing. Let other file play.
       
-  } else {
+  } else {                                  //If nothing is playing currently, a new file can be played. 
     
       AudioOutI2S.play(waveFile[2]);  
       
@@ -162,7 +162,7 @@ void playISR3() {
     
       //do nothing. Let other file play.
       
-  } else {
+  } else {                                  //If nothing is playing currently, a new file can be played. 
     
       AudioOutI2S.play(waveFile[3]);  
       
@@ -178,7 +178,7 @@ void playISR4() {
     
       //do nothing. Let other file play.
       
-  } else {
+  } else {                                //If nothing is playing currently, a new file can be played. 
     
       AudioOutI2S.play(waveFile[4]);  
       
@@ -194,7 +194,7 @@ void playISR5() {
     
       //do nothing. Let other file play.
       
-  } else {
+  } else {                                //If nothing is playing currently, a new file can be played. 
     
       AudioOutI2S.play(waveFile[5]);  
       
