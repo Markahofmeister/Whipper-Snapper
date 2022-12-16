@@ -48,7 +48,7 @@ FunctionArray ISRs[] = {                      //pointer to array of ISR names
 void setup() {
 
   Serial.begin(9600);                         //Command Serial to initialize and wait 
-  while (!Serial);                            //Wait for Serial monitor to be initialized 
+  //while (!Serial);                            //Wait for Serial monitor to be initialized 
   Serial.println("Serial monitor initialized"); 
   
   Serial.print("Initializing SD card...");      //Ensure that SD card can be read 
@@ -86,7 +86,7 @@ void setup() {
     
   }
 
-  AudioOutI2S.volume(20.0);                         //max volume = 100.0. Some bass issues above ~70.0 volume. 
+  AudioOutI2S.volume(100.0);                         //max volume = 100.0. Some bass issues above ~70.0 volume. 
 
   pinMode(pwrLED, OUTPUT);
 
