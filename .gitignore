@@ -31,3 +31,4 @@ scripts/__pycache__/
 *.dwl2
 
 media/*.MP4
+media/*.avi
