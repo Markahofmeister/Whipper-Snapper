@@ -1,6 +1,6 @@
 # Whipper-Snapper
 
-'''
+```bash
 ├───fab
 │   └───imported
 ├───figures
@@ -11,4 +11,4 @@
 │   ├───src
 │   └───wav-files
 └───Whipper-Snapper-PCB
-'''
+```
